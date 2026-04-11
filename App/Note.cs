@@ -8,4 +8,7 @@ public class Note
     public required  string  Name { get; set; }
     public required string TypeOfSqlite { get; set; }
     public required string TypeInCSharp { get; set; }
+    
+    public required int UserId {get; set;}
+    public User? User {get; set;}
 }
