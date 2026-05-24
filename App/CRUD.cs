@@ -57,18 +57,18 @@ public class CRUD
         return result;
     }
     
-    public static async Task Update(User user, string title, CancellationToken ct = default)
+    public static async Task Update(User user, string changes, CancellationToken ct = default)
     {
         await using var db = new DataContext();
-        user.Name = title;
+        user.Name = changes;
         db.Users.Update(user);
         await db.SaveChangesAsync(ct);
     }
     
-    public static async Task Update(Note note, string title, string typeOfSqlite, string typeInCSharp,int userId, CancellationToken ct = default)
+    public static async Task Update(Note note, string changes, string typeOfSqlite, string typeInCSharp,int userId, CancellationToken ct = default)
     {
         await using var db = new DataContext();
-        note.Title = title;
+        note.Title = changes;
         note.TypeOfSqlite =  typeOfSqlite;
         note.TypeInCSharp = typeInCSharp;
         note.UserId = userId;
