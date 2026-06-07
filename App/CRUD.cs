@@ -16,14 +16,13 @@ public class CRUD
         return user;
     }
     
-    public static async Task<Note> Create(string title, string typeOfSqlite, string typeInCSharp,int userId, CancellationToken ct = default)
+    public static async Task<Note> Create(string title,int userId, CancellationToken ct = default)
     {
         await using var db = new DataContext();
         var record = new Note
         {
             Title = title, 
-            TypeOfSqlite = typeOfSqlite,
-            TypeInCSharp = typeInCSharp,
+            CreatedAt = DateTimeOffset.Now,
             UserId = db.Users.Find(userId)!.Id
         };
         db.Notes.Add(record);
@@ -65,12 +64,11 @@ public class CRUD
         await db.SaveChangesAsync(ct);
     }
     
-    public static async Task Update(Note note, string changes, string typeOfSqlite, string typeInCSharp,int userId, CancellationToken ct = default)
+    public static async Task Update(Note note, string changes,int userId, CancellationToken ct = default)
     {
         await using var db = new DataContext();
         note.Title = changes;
-        note.TypeOfSqlite =  typeOfSqlite;
-        note.TypeInCSharp = typeInCSharp;
+        note.CreatedAt =  DateTimeOffset.Now;
         note.UserId = userId;
         db.Notes.Update(note);
         await db.SaveChangesAsync(ct);
@@ -112,8 +110,7 @@ public class CRUD
                 notes.Add(new Note
                 {
                     Title = faker.Lorem.Word(),
-                    TypeOfSqlite = faker.Lorem.Word(),
-                    TypeInCSharp = faker.Lorem.Word(),
+                    CreatedAt = DateTimeOffset.Now,
                     UserId = 0,
                     User = user
                 });

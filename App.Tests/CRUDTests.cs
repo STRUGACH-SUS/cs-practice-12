@@ -32,10 +32,10 @@ public class CRUDTests
     }
     
     [Theory]
-    [InlineData("Name","TEXT","string")]
-    [InlineData("1","1","1")]
-    [InlineData("","","")]
-    public void CreateNote_PassValid_Success(string title, string typeOfSqlite, string typeInCSharp)
+    [InlineData("Name")]
+    [InlineData("1")]
+    [InlineData("")]
+    public void CreateNote_PassValid_Success(string title)
     {
         //Act
         var db = new DataContext();
@@ -46,7 +46,7 @@ public class CRUDTests
         };
         db.Users.Add(user);
         db.SaveChanges();
-        CRUD.Create(title, typeOfSqlite, typeInCSharp, user.Id).Wait();
+        CRUD.Create(title, user.Id).Wait();
         var result = db.Notes.Select(x => x.Title).Contains(title);
         //Assert
         Assert.True(result);
@@ -54,10 +54,10 @@ public class CRUDTests
     }
     
     [Theory]
-    [InlineData("Name","TEXT","string")]
-    [InlineData("1","1","1")]
-    [InlineData("","","")]
-    public void CreateNote_PassError_Fail(string title, string typeOfSqlite, string typeInCSharp)
+    [InlineData("Name")]
+    [InlineData("1")]
+    [InlineData("")]
+    public void CreateNote_PassError_Fail(string title)
     {
         //Act
         var db = new DataContext();
@@ -67,7 +67,7 @@ public class CRUDTests
             Name = "Sam"
         };
         //Assert
-        Assert.Throws<AggregateException>(() => CRUD.Create(title, typeOfSqlite, typeInCSharp, user.Id).Wait());
+        Assert.Throws<AggregateException>(() => CRUD.Create(title, user.Id).Wait());
         db.Database.EnsureDeleted();
     }
     
@@ -84,7 +84,7 @@ public class CRUDTests
         db.Users.Add(user);
         db.SaveChanges();
         //Assert
-        Assert.Throws<AggregateException>(() => CRUD.Create(null!, null!, null!,user.Id).Wait());
+        Assert.Throws<AggregateException>(() => CRUD.Create(null!,user.Id).Wait());
         db.Database.EnsureDeleted();
     }
     
@@ -139,8 +139,7 @@ public class CRUDTests
         var record = new Note
         {
             Title = search,
-            TypeInCSharp = "",
-            TypeOfSqlite = "",
+            CreatedAt = DateTimeOffset.Now,
             UserId = user.Id,
         };
         db.Notes.Add(record);
@@ -183,8 +182,7 @@ public class CRUDTests
         var record = new Note
         {
             Title = "search",
-            TypeInCSharp = "",
-            TypeOfSqlite = "",
+            CreatedAt = DateTimeOffset.Now,
             UserId = user.Id,
         };
         db.Notes.Add(record);
@@ -286,13 +284,12 @@ public class CRUDTests
         var record = new Note
         {
             Title = "search",
-            TypeInCSharp = "",
-            TypeOfSqlite = "",
+            CreatedAt = DateTimeOffset.Now,
             UserId = user.Id,
         };
         db.Notes.Add(record);
         db.SaveChanges();
-        CRUD.Update(record,changes, changes, changes,user.Id).Wait();
+        CRUD.Update(record,changes,user.Id).Wait();
         var result = db.Notes.Select(x => x.Title).Contains(changes);
         //Assert
         Assert.True(result);
@@ -311,12 +308,11 @@ public class CRUDTests
         var record = new Note
         {
             Title = "search",
-            TypeInCSharp = "",
-            TypeOfSqlite = "",
+            CreatedAt = DateTimeOffset.Now,
             UserId = 0
         };
         //Assert
-        Assert.Throws<AggregateException>(()=>CRUD.Update(record,changes, changes, changes,record.UserId).Wait());
+        Assert.Throws<AggregateException>(()=>CRUD.Update(record,changes,record.UserId).Wait());
         db.Database.EnsureDeleted();
     }
     
@@ -334,14 +330,13 @@ public class CRUDTests
         var record = new Note
         {
             Title = "search",
-            TypeInCSharp = "",
-            TypeOfSqlite = "",
+            CreatedAt = DateTimeOffset.Now,
             UserId = user.Id,
         };
         db.Notes.Add(record);
         db.SaveChanges();
         //Assert
-        Assert.Throws<AggregateException>(() => CRUD.Update(record, null!, null!, null!, user.Id).Wait());
+        Assert.Throws<AggregateException>(() => CRUD.Update(record, null!, user.Id).Wait());
         db.Database.EnsureDeleted();
     }
     
@@ -402,8 +397,7 @@ public class CRUDTests
         var record = new Note
         {
             Title = search,
-            TypeInCSharp = "",
-            TypeOfSqlite = "",
+            CreatedAt = DateTimeOffset.Now,
             UserId = user.Id,
         };
         db.Notes.Add(record);
@@ -427,8 +421,7 @@ public class CRUDTests
         var record = new Note
         {
             Title = "search",
-            TypeInCSharp = "",
-            TypeOfSqlite = "",
+            CreatedAt = DateTimeOffset.Now,
             UserId = 0
         };
         //Assert
